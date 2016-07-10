@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    
+    $(document).ready(function(){
+
+
+        $.getJSON('http://tempsend.com/88FE69C519/53A8/linky8234aexport.json',function(jsonData){
+
+            
+              //alert(JSON.stringify(jsonData));
+
+              for (var key in jsonData) {
+                 pos=0,neg=0;
+            if (jsonData.hasOwnProperty(key)) {
+
+                 //alert(jsonData[key].message);
+                    var msg=jsonData[key].message.split(" ").join("+");
+
+                  var url='https://api.havenondemand.com/1/api/sync/analyzesentiment/v1?text='+msg+'&language=eng&apikey=1179bf7d-f521-4a6c-a95d-88551e35956c';
+
+                  $.getJSON(url,function(data){
+                        if(data.aggregate.sentiment==='positive')
+                          pos++;
+                        else
+                          neg++;
+
+                        
+                  });
+
+                   
+
+                  }
+                }
+
+alert(pos);
+
+// Load the Visualization API and the piechart package.
+    google.charts.load('current', {'packages':['corechart']});
+      
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+      
+    function drawChart() {
+      //alert('http://tempsend.com/C2C56A2FED/A18B/linky8234aexport3.json');
+      
+     // alert(pos+" "+neg);
+// Create our data table out of JSON data loaded from server.
+      var data = google.visualization.arrayToDataTable([
+        ['Task', 'Hours per Day'],
+          ['Positive', pos],
+          ['Negative',    neg]
+        
+        ]);
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      chart.draw(data, {width: 400, height: 240});
+
+     
+          
+      
+    }
+
+
+
+        });
+
+
+    
+
+     });
+
+    </script>
+  </head>
+
+  <body>
+    <!--Div that will hold the pie chart-->
+    <div id="chart_div"></div>
+  </body>
+</html>
